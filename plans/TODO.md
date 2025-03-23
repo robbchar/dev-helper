@@ -12,7 +12,7 @@
   
 ### 2. **Core Functionality (Basic Features):**
 - [x] Set up the **GraphQL server** for managing app data (SQLite as the database).
-- [ ] Set up basic **state management** using **Context API**.
+- [x] Set up basic **state management** using **Context API**.
   
 ### 3. **Feature Implementation (in order):**
 
@@ -49,6 +49,7 @@
 - [ ] Polish the UI with subtle animations/tweaks.
   - [ ] Add small animations for smooth interactions (e.g., slideout notifications, transitions).
   - [ ] Focus on **clean minimalist UI**.
+  - [ ] Implement theme support (light/dark mode) with system preference detection.
 - [ ] Test and refine the error handling system:
   - [ ] Ensure **slideout notifications** work correctly, with error messages able to stay visible if required.
   - [ ] Implement **component highlighting** to indicate specific error areas in components.
