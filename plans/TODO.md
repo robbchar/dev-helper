@@ -1,0 +1,66 @@
+
+## **Plan Breakdown**
+
+### 1. **Basic Setup:**
+- [x] Set up the **Electron** app with initial folder structure and configurations.
+- [ ] Install required dependencies for **React**, **SQLite**, **GraphQL**, and other necessary libraries.
+- [ ] Set up **sidebar navigation** (with Settings included in the sidebar) and the basic layout.
+- [ ] Set up **basic slideout error notification** system, with error messages that can automatically slide out or remain visible if needed.
+  
+### 2. **Core Functionality (Basic Features):**
+- [ ] Set up the **GraphQL server** for managing app data (SQLite as the database).
+- [ ] Set up basic **state management** using **Redux** or **Context API**.
+- [ ] Set up **basic navigation** for the app:
+  - [ ] Sidebar with **Regex Tester**, **JSON Formatter**, **Snippet Manager** and **Settings**.
+- [ ] Implement **basic slideout error notification** system.
+  - [ ] Slideout notifications that appear for error messages.
+  - [ ] Option for user to override and keep notifications visible.
+  - [ ] Error messages may also be associated with component highlighting to indicate error locations (e.g., in Regex Tester or JSON Formatter).
+  
+### 3. **Feature Implementation (in order):**
+
+#### **Regex Tester**:
+- [ ] Implement regex testing functionality, including:
+  - [ ] Real-time regex pattern generation based on user input.
+  - [ ] Case sensitivity, multiline, and global flags toggleable via checkboxes.
+  - [ ] Real-time matching of strings against the regex pattern.
+  - [ ] Feedback if the regex is invalid (highlighting invalid regex areas).
+  - [ ] Show a real-time preview of the regex output based on the input string.
+  - [ ] Allow saving of regex patterns, with a name and optional tags.
+  - [ ] Provide options for users to adjust behavior based on flags (case sensitivity, etc.).
+  - [ ] Write tests for regex validation, real-time pattern generation, and error handling.
+
+#### **JSON Formatter**:
+- [ ] Implement JSON formatting functionality, including:
+  - [ ] Real-time JSON validation as text is entered (squiggly underline errors).
+  - [ ] Real-time JSON formatting and auto-correction for invalid JSON (focus on in-app editing).
+  - [ ] Syntax highlighting based on JSON format (different colors for property names and values).
+  - [ ] Clear notification for invalid JSON.
+  - [ ] No file saving or loading functionality (focused on in-app editing).
+  - [ ] Write tests for JSON validation and formatting.
+
+#### **Snippet Manager**:
+- [ ] Implement snippet storage and management functionality, including:
+  - [ ] Allow users to store code snippets with customizable **titles**, **descriptions**, and **tags**.
+  - [ ] Store snippets in a flat list and provide **search** functionality for names, descriptions, and tags.
+  - [ ] Display **syntax highlighting** for code snippets based on the language.
+  - [ ] Implement **search box** for arbitrary text search through titles and descriptions (tags will be a separate searchable area).
+  - [ ] Provide the ability for users to label snippets with arbitrary names and tags.
+  - [ ] Write tests for snippet storage, search, and retrieval.
+
+### 4. **UI/UX Enhancements:**
+- [ ] Polish the UI with subtle animations/tweaks.
+  - [ ] Add small animations for smooth interactions (e.g., slideout notifications, transitions).
+  - [ ] Focus on **clean minimalist UI**.
+- [ ] Test and refine the error handling system:
+  - [ ] Ensure **slideout notifications** work correctly, with error messages able to stay visible if required.
+  - [ ] Implement **component highlighting** to indicate specific error areas in components.
+
+### 5. **Testing and Refinement:**
+- [ ] Continue developing **unit tests** for each module as they are built:
+  - [ ] Write tests for Regex Tester, JSON Formatter, and Snippet Manager.
+- [ ] Perform **integration and end-to-end tests** for the app as a whole.
+  - [ ] Ensure modules interact smoothly together (Regex, JSON, Snippets).
+- [ ] Refine the user experience based on feedback and discovered issues.
+  - [ ] Fix any bugs discovered during testing.
+  - [ ] Address any user experience challenges identified during testing.
