@@ -1,18 +1,46 @@
 {
   "name": "dev-helper",
   "version": "1.0.0",
-  "description": "Developer Dashboard with Regex Tester, JSON Formatter, and Snippet Manager",
-  "type": "module",
+  "description": "A desktop application for developers with useful tools",
   "main": "dist/main/main.js",
+  "type": "module",
   "scripts": {
-    "start": "electron .",
-    "dev": "vite",
+    "start": "tsc && electron .",
+    "dev": "vite --host",
     "build": "tsc && vite build && electron-builder",
     "test": "jest",
-    "test:graphql": "node --loader ts-node/esm src/server/test.ts"
+    "test:graphql": "ts-node src/server/test.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
+    "@types/uuid": "^10.0.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^29.1.0",
+    "electron-builder": "^24.12.0",
+    "terser": "^5.39.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.9.5",
+    "@apollo/server": "^4.10.0",
+    "@heroicons/react": "^2.1.1",
+    "better-sqlite3": "^11.9.1",
+    "electron-is-dev": "^3.0.1",
+    "graphql": "^16.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1"
   },
   "build": {
-    "appId": "com.dev-helper.app",
+    "appId": "com.devhelper.app",
     "productName": "Dev Helper",
     "directories": {
       "output": "release"
@@ -22,53 +50,16 @@
       "package.json"
     ],
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "signingHashAlgorithms": null,
+      "signAndEditExecutable": false
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg",
+      "identity": null
     },
     "linux": {
       "target": "AppImage"
     }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/robbchar/dev-helper.git"
-  },
-  "keywords": [
-    "electron",
-    "react",
-    "developer-tools",
-    "regex",
-    "json",
-    "snippets"
-  ],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/robbchar/dev-helper/issues"
-  },
-  "homepage": "https://github.com/robbchar/dev-helper#readme",
-  "dependencies": {
-    "@apollo/server": "^4.10.0",
-    "electron-store": "^8.1.0",
-    "graphql": "^16.8.1",
-    "graphql-tag": "^2.12.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sqlite": "^5.0.1",
-    "sqlite3": "^5.1.7",
-    "uuid": "^9.0.1"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
-    "@types/uuid": "^9.0.8",
-    "@vitejs/plugin-react": "^4.2.1",
-    "electron": "^28.2.3",
-    "electron-builder": "^24.9.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "vite": "^5.1.3"
   }
 }

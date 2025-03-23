@@ -1,40 +1,28 @@
-import { gql } from 'graphql-tag';
-
-export const regexTypeDefs = gql`
+export const regexTypeDefs = `#graphql
   type RegexPattern {
     id: ID!
     pattern: String!
     name: String!
     description: String
-    flags: String!
+    flags: String
     tags: [String!]!
-    createdAt: String!
-    updatedAt: String!
+    created_at: String!
+    updated_at: String!
   }
 
-  extend type Query {
-    regexPatterns: [RegexPattern!]!
-    regexPattern(id: ID!): RegexPattern
+  input CreateRegexPatternInput {
+    pattern: String!
+    name: String!
+    description: String
+    flags: String
+    tags: [String!]
   }
 
-  extend type Mutation {
-    createRegexPattern(
-      pattern: String!
-      name: String!
-      description: String
-      flags: String!
-      tags: [String!]!
-    ): RegexPattern!
-    
-    updateRegexPattern(
-      id: ID!
-      pattern: String
-      name: String
-      description: String
-      flags: String
-      tags: [String!]
-    ): RegexPattern!
-    
-    deleteRegexPattern(id: ID!): Boolean!
+  input UpdateRegexPatternInput {
+    pattern: String
+    name: String
+    description: String
+    flags: String
+    tags: [String!]
   }
 `; 

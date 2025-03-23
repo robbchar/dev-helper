@@ -1,49 +1,68 @@
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../db/index.js';
-import { Snippet, CreateSnippetInput, UpdateSnippetInput } from '../types.js';
+import { getDb } from '../db/index.js';
 
-export const snippetResolvers = {
+interface SnippetDB {
+  id: string;
+  title: string;
+  code: string;
+  language: string;
+  description?: string;
+  tags: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface Snippet {
+  id: string;
+  title: string;
+  code: string;
+  language: string;
+  description?: string;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+export const snippetsResolvers = {
   Query: {
-    snippets: async (): Promise<Snippet[]> => {
-      const snippets = await db.all(`
-        SELECT * FROM snippets ORDER BY created_at DESC
-      `);
+    async snippets() {
+      const db = await getDb();
+      const snippets = db.prepare('SELECT * FROM snippets').all() as SnippetDB[];
       return snippets.map(snippet => ({
         ...snippet,
-        tags: JSON.parse(snippet.tags)
+        tags: snippet.tags ? JSON.parse(snippet.tags) : []
       }));
     },
-    snippet: async (_: unknown, { id }: { id: string }): Promise<Snippet | null> => {
-      const snippet = await db.get('SELECT * FROM snippets WHERE id = ?', id);
+    snippet: async (_parent: unknown, { id }: { id: string }): Promise<Snippet | null> => {
+      const db = await getDb();
+      const snippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB | undefined;
       if (!snippet) return null;
       return {
         ...snippet,
-        tags: JSON.parse(snippet.tags)
+        tags: snippet.tags ? JSON.parse(snippet.tags) : []
       };
     }
   },
   Mutation: {
-    createSnippet: async (_: unknown, input: CreateSnippetInput): Promise<Snippet> => {
+    async createSnippet(_parent: unknown, { input }: { input: Omit<Snippet, 'id' | 'created_at' | 'updated_at'> }) {
+      const db = await getDb();
       const id = uuidv4();
-      const now = new Date().toISOString();
-      await db.run(
-        `INSERT INTO snippets (id, title, description, code, language, tags, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [id, input.title, input.description, input.code, input.language, JSON.stringify(input.tags), now, now]
-      );
+      const tags = input.tags ? JSON.stringify(input.tags) : null;
+      
+      db.prepare(
+        `INSERT INTO snippets (id, title, code, language, description, tags)
+         VALUES (?, ?, ?, ?, ?, ?)`
+      ).run(id, input.title, input.code, input.language, input.description, tags);
+
+      const snippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB;
       return {
-        id,
-        title: input.title,
-        description: input.description,
-        code: input.code,
-        language: input.language,
-        tags: input.tags,
-        createdAt: now,
-        updatedAt: now
+        ...snippet,
+        tags: snippet.tags ? JSON.parse(snippet.tags) : []
       };
     },
-    updateSnippet: async (_: unknown, { id, ...fields }: UpdateSnippetInput): Promise<Snippet> => {
-      const snippet = await db.get('SELECT * FROM snippets WHERE id = ?', id);
+    updateSnippet: async (_parent: unknown, { id, ...fields }: { id: string, title?: string, code?: string, language?: string, description?: string, tags?: string[] }): Promise<Snippet> => {
+      const db = await getDb();
+      const snippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB | undefined;
       if (!snippet) throw new Error('Snippet not found');
 
       const updates = [];
@@ -61,26 +80,26 @@ export const snippetResolvers = {
         values.push(now);
         values.push(id);
 
-        await db.run(
-          `UPDATE snippets SET ${updates.join(', ')} WHERE id = ?`,
-          values
-        );
+        db.prepare(
+          `UPDATE snippets SET ${updates.join(', ')} WHERE id = ?`
+        ).run(...values);
 
-        const updatedSnippet = await db.get('SELECT * FROM snippets WHERE id = ?', id);
+        const updatedSnippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB;
         return {
           ...updatedSnippet,
-          tags: JSON.parse(updatedSnippet.tags)
+          tags: updatedSnippet.tags ? JSON.parse(updatedSnippet.tags) : []
         };
       }
 
       return {
         ...snippet,
-        tags: JSON.parse(snippet.tags)
+        tags: snippet.tags ? JSON.parse(snippet.tags) : []
       };
     },
-    deleteSnippet: async (_: unknown, { id }: { id: string }): Promise<boolean> => {
-      const result = await db.run('DELETE FROM snippets WHERE id = ?', id);
-      return result.changes ? result.changes > 0 : false;
+    deleteSnippet: async (_parent: unknown, { id }: { id: string }): Promise<boolean> => {
+      const db = await getDb();
+      const result = db.prepare('DELETE FROM snippets WHERE id = ?').run(id);
+      return result.changes > 0;
     }
   }
 }; 

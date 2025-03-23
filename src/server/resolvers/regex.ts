@@ -1,49 +1,68 @@
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../db/index.js';
-import { RegexPattern, CreateRegexPatternInput, UpdateRegexPatternInput } from '../types.js';
+import { getDb } from '../db/index.js';
+
+interface RegexPatternDB {
+  id: string;
+  pattern: string;
+  name: string;
+  description?: string;
+  flags?: string;
+  tags: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+interface RegexPattern {
+  id: string;
+  pattern: string;
+  name: string;
+  description?: string;
+  flags?: string;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+}
 
 export const regexResolvers = {
   Query: {
-    regexPatterns: async (): Promise<RegexPattern[]> => {
-      const patterns = await db.all(`
-        SELECT * FROM regex_patterns ORDER BY created_at DESC
-      `);
+    async regexPatterns() {
+      const db = await getDb();
+      const patterns = db.prepare('SELECT * FROM regex_patterns').all() as RegexPatternDB[];
       return patterns.map(pattern => ({
         ...pattern,
-        tags: JSON.parse(pattern.tags)
+        tags: pattern.tags ? JSON.parse(pattern.tags) : []
       }));
     },
-    regexPattern: async (_: unknown, { id }: { id: string }): Promise<RegexPattern | null> => {
-      const pattern = await db.get('SELECT * FROM regex_patterns WHERE id = ?', id);
+    regexPattern: async (_parent: unknown, { id }: { id: string }): Promise<RegexPattern | null> => {
+      const db = await getDb();
+      const pattern = db.prepare('SELECT * FROM regex_patterns WHERE id = ?').get(id) as RegexPatternDB | undefined;
       if (!pattern) return null;
       return {
         ...pattern,
-        tags: JSON.parse(pattern.tags)
+        tags: pattern.tags ? JSON.parse(pattern.tags) : []
       };
     }
   },
   Mutation: {
-    createRegexPattern: async (_: unknown, input: CreateRegexPatternInput): Promise<RegexPattern> => {
+    async createRegexPattern(_parent: unknown, { input }: { input: Omit<RegexPattern, 'id' | 'created_at' | 'updated_at'> }) {
+      const db = await getDb();
       const id = uuidv4();
-      const now = new Date().toISOString();
-      await db.run(
-        `INSERT INTO regex_patterns (id, pattern, name, description, flags, tags, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [id, input.pattern, input.name, input.description, input.flags, JSON.stringify(input.tags), now, now]
-      );
+      const tags = input.tags ? JSON.stringify(input.tags) : null;
+      
+      db.prepare(
+        `INSERT INTO regex_patterns (id, pattern, name, description, flags, tags)
+         VALUES (?, ?, ?, ?, ?, ?)`
+      ).run(id, input.pattern, input.name, input.description, input.flags, tags);
+
+      const pattern = db.prepare('SELECT * FROM regex_patterns WHERE id = ?').get(id) as RegexPatternDB;
       return {
-        id,
-        pattern: input.pattern,
-        name: input.name,
-        description: input.description,
-        flags: input.flags,
-        tags: input.tags,
-        createdAt: now,
-        updatedAt: now
+        ...pattern,
+        tags: pattern.tags ? JSON.parse(pattern.tags) : []
       };
     },
-    updateRegexPattern: async (_: unknown, { id, ...fields }: UpdateRegexPatternInput): Promise<RegexPattern> => {
-      const pattern = await db.get('SELECT * FROM regex_patterns WHERE id = ?', id);
+    updateRegexPattern: async (_parent: unknown, { id, ...fields }: { id: string, pattern?: string, name?: string, description?: string, flags?: string, tags?: string[] }): Promise<RegexPattern> => {
+      const db = await getDb();
+      const pattern = db.prepare('SELECT * FROM regex_patterns WHERE id = ?').get(id) as RegexPatternDB | undefined;
       if (!pattern) throw new Error('Regex pattern not found');
 
       const updates = [];
@@ -61,26 +80,26 @@ export const regexResolvers = {
         values.push(now);
         values.push(id);
 
-        await db.run(
-          `UPDATE regex_patterns SET ${updates.join(', ')} WHERE id = ?`,
-          values
-        );
+        db.prepare(
+          `UPDATE regex_patterns SET ${updates.join(', ')} WHERE id = ?`
+        ).run(...values);
 
-        const updatedPattern = await db.get('SELECT * FROM regex_patterns WHERE id = ?', id);
+        const updatedPattern = db.prepare('SELECT * FROM regex_patterns WHERE id = ?').get(id) as RegexPatternDB;
         return {
           ...updatedPattern,
-          tags: JSON.parse(updatedPattern.tags)
+          tags: updatedPattern.tags ? JSON.parse(updatedPattern.tags) : []
         };
       }
 
       return {
         ...pattern,
-        tags: JSON.parse(pattern.tags)
+        tags: pattern.tags ? JSON.parse(pattern.tags) : []
       };
     },
-    deleteRegexPattern: async (_: unknown, { id }: { id: string }): Promise<boolean> => {
-      const result = await db.run('DELETE FROM regex_patterns WHERE id = ?', id);
-      return result.changes ? result.changes > 0 : false;
+    deleteRegexPattern: async (_parent: unknown, { id }: { id: string }): Promise<boolean> => {
+      const db = await getDb();
+      const result = db.prepare('DELETE FROM regex_patterns WHERE id = ?').run(id);
+      return result.changes > 0;
     }
   }
 }; 

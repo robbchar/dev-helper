@@ -4,10 +4,10 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: './',
-  root: path.join(__dirname, 'src/renderer'),
+  root: '.',
+  base: '/',
   build: {
-    outDir: path.join(__dirname, 'dist/renderer'),
+    outDir: 'dist/renderer',
     emptyOutDir: true,
     sourcemap: true,
     minify: 'terser',
@@ -20,7 +20,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 5173,
+    host: true,
     strictPort: true,
     hmr: {
       overlay: true,
@@ -33,6 +34,7 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/renderer/components'),
       '@styles': path.resolve(__dirname, './src/renderer/styles'),
     },
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json']
   },
   css: {
     modules: {

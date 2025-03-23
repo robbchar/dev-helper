@@ -1,19 +1,20 @@
-import { app } from 'electron';
+import Database from 'better-sqlite3';
+import { fileURLToPath } from 'url';
 import path from 'path';
-import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
 import { initSnippetsTable } from './snippets.js';
 import { initRegexTable } from './regex.js';
 
-// Use a local path for testing, app.getPath for production
-const dbPath = process.env.NODE_ENV === 'test' 
-  ? path.join(process.cwd(), 'test.db')
-  : path.join(process.cwd(), 'dev-helper.db');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-export const db = await open({
-  filename: dbPath,
-  driver: sqlite3.Database
-});
+let db: Database.Database | null = null;
+
+export async function getDb() {
+  if (!db) {
+    db = new Database(path.join(__dirname, '../../../data.db'));
+  }
+  return db;
+}
 
 export async function initDatabase() {
   await initSnippetsTable();

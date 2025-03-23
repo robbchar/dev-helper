@@ -1,40 +1,28 @@
-import { gql } from 'graphql-tag';
-
-export const snippetTypeDefs = gql`
+export const snippetsTypeDefs = `#graphql
   type Snippet {
     id: ID!
     title: String!
-    description: String
     code: String!
     language: String!
+    description: String
     tags: [String!]!
-    createdAt: String!
-    updatedAt: String!
+    created_at: String!
+    updated_at: String!
   }
 
-  extend type Query {
-    snippets: [Snippet!]!
-    snippet(id: ID!): Snippet
+  input CreateSnippetInput {
+    title: String!
+    code: String!
+    language: String!
+    description: String
+    tags: [String!]
   }
 
-  extend type Mutation {
-    createSnippet(
-      title: String!
-      description: String
-      code: String!
-      language: String!
-      tags: [String!]!
-    ): Snippet!
-    
-    updateSnippet(
-      id: ID!
-      title: String
-      description: String
-      code: String
-      language: String
-      tags: [String!]
-    ): Snippet!
-    
-    deleteSnippet(id: ID!): Boolean!
+  input UpdateSnippetInput {
+    title: String
+    code: String
+    language: String
+    description: String
+    tags: [String!]
   }
 `; 

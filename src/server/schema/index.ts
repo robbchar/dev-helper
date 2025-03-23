@@ -1,15 +1,23 @@
-import { snippetTypeDefs } from './snippets.js';
+import { snippetsTypeDefs } from './snippets.js';
 import { regexTypeDefs } from './regex.js';
-import { gql } from 'graphql-tag';
 
-const baseTypeDefs = gql`
+export const typeDefs = `#graphql
+  ${snippetsTypeDefs}
+  ${regexTypeDefs}
+
   type Query {
-    _empty: String
+    snippets: [Snippet!]!
+    snippet(id: ID!): Snippet
+    regexPatterns: [RegexPattern!]!
+    regexPattern(id: ID!): RegexPattern
   }
 
   type Mutation {
-    _empty: String
+    createSnippet(input: CreateSnippetInput!): Snippet!
+    updateSnippet(id: ID!, input: UpdateSnippetInput!): Snippet!
+    deleteSnippet(id: ID!): Boolean!
+    createRegexPattern(input: CreateRegexPatternInput!): RegexPattern!
+    updateRegexPattern(id: ID!, input: UpdateRegexPatternInput!): RegexPattern!
+    deleteRegexPattern(id: ID!): Boolean!
   }
-`;
-
-export const typeDefs = [baseTypeDefs, snippetTypeDefs, regexTypeDefs]; 
+`; 

@@ -1,8 +1,8 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import express from 'express';
-import { typeDefs } from './schema';
-import { resolvers } from './resolvers';
+import { typeDefs } from './schema/index.js';
+import { resolvers } from './resolvers/index.js';
 
 export async function startServer() {
   const app = express();

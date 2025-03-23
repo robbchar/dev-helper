@@ -1,13 +1,13 @@
-import { snippetResolvers } from './snippets.js';
+import { snippetsResolvers } from './snippets.js';
 import { regexResolvers } from './regex.js';
 
 export const resolvers = {
   Query: {
-    ...snippetResolvers.Query,
+    ...snippetsResolvers.Query,
     ...regexResolvers.Query,
   },
   Mutation: {
-    ...snippetResolvers.Mutation,
+    ...snippetsResolvers.Mutation,
     ...regexResolvers.Mutation,
   }
 }; 
