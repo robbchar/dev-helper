@@ -5,6 +5,7 @@ import Snippets from './pages/Snippets';
 import RegexTester from './pages/RegexTester';
 import JsonFormatter from './pages/JsonFormatter';
 import Settings from './pages/Settings';
+import NotificationManager from './components/Notification/NotificationManager';
 import styles from './App.module.css';
 
 const App: React.FC = () => {
@@ -20,6 +21,7 @@ const App: React.FC = () => {
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </main>
+        <NotificationManager />
       </div>
     </Router>
   );

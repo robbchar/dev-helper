@@ -1,0 +1,117 @@
+.notificationContainer {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notification {
+  position: relative;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: white;
+  box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.06);
+  width: 25rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: top 0.3s linear;
+}
+
+.notification.success {
+  border-left: 0.25rem solid #10B981;
+}
+
+.notification.error {
+  border-left: 0.25rem solid #EF4444;
+}
+
+.notification.warning {
+  border-left: 0.25rem solid #F59E0B;
+}
+
+.notification.info {
+  border-left: 0.25rem solid #3B82F6;
+}
+
+.message {
+  flex: 1;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #1F2937;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.closeButton,
+.okButton {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: #6B7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.closeButton svg,
+.okButton svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.closeButton:hover,
+.okButton:hover {
+  background-color: #F3F4F6;
+  color: #1F2937;
+}
+
+.okButton {
+  color: #10B981;
+}
+
+.okButton:hover {
+  color: #059669;
+}
+
+/* Animation classes */
+.slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.slideOut {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+} 

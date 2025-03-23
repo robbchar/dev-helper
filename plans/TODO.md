@@ -4,17 +4,15 @@
 - [x] Set up the **Electron** app with initial folder structure and configurations.
 - [x] Install required dependencies for **React**, **SQLite**, **GraphQL**, and other necessary libraries.
 - [x] Set up **sidebar navigation** (with Settings included in the sidebar) and the basic layout.
-- [ ] Set up **basic slideout error notification** system, with error messages that can automatically slide out or remain visible if needed.
+  - [x] with **Regex Tester**, **JSON Formatter**, **Snippet Manager** and **Settings**.
+- [x] Set up **basic slideout error notification** system, with error messages that can automatically slide out or remain visible if needed.
+  - [x] Slideout notifications that appear for error messages.
+  - [x] Option for user to override and keep notifications visible.
+  - [x] Error messages may also be associated with component highlighting to indicate error locations (e.g., in Regex Tester or JSON Formatter).
   
 ### 2. **Core Functionality (Basic Features):**
 - [ ] Set up the **GraphQL server** for managing app data (SQLite as the database).
-- [ ] Set up basic **state management** using **Redux** or **Context API**.
-- [ ] Set up **basic navigation** for the app:
-  - [ ] Sidebar with **Regex Tester**, **JSON Formatter**, **Snippet Manager** and **Settings**.
-- [ ] Implement **basic slideout error notification** system.
-  - [ ] Slideout notifications that appear for error messages.
-  - [ ] Option for user to override and keep notifications visible.
-  - [ ] Error messages may also be associated with component highlighting to indicate error locations (e.g., in Regex Tester or JSON Formatter).
+- [ ] Set up basic **state management** using **Context API**.
   
 ### 3. **Feature Implementation (in order):**
 
