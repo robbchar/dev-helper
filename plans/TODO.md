@@ -11,7 +11,7 @@
   - [x] Error messages may also be associated with component highlighting to indicate error locations (e.g., in Regex Tester or JSON Formatter).
   
 ### 2. **Core Functionality (Basic Features):**
-- [ ] Set up the **GraphQL server** for managing app data (SQLite as the database).
+- [x] Set up the **GraphQL server** for managing app data (SQLite as the database).
 - [ ] Set up basic **state management** using **Context API**.
   
 ### 3. **Feature Implementation (in order):**
