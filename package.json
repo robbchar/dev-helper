@@ -2,22 +2,34 @@
   "name": "dev-helper",
   "version": "1.0.0",
   "description": "Developer Dashboard with Regex Tester, JSON Formatter, and Snippet Manager",
+  "type": "module",
   "main": "dist/main/main.js",
   "scripts": {
-    "start": "tsc && electron .",
+    "start": "electron .",
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
-    "test": "jest"
+    "test": "jest",
+    "test:graphql": "node --loader ts-node/esm src/server/test.ts"
   },
   "build": {
-    "appId": "com.devhelper.app",
+    "appId": "com.dev-helper.app",
+    "productName": "Dev Helper",
     "directories": {
-      "output": "build"
+      "output": "release"
     },
     "files": [
       "dist/**/*",
       "package.json"
-    ]
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "repository": {
     "type": "git",
@@ -37,19 +49,26 @@
     "url": "https://github.com/robbchar/dev-helper/issues"
   },
   "homepage": "https://github.com/robbchar/dev-helper#readme",
-  "devDependencies": {
-    "@types/node": "^22.13.11",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^35.0.3",
-    "electron-builder": "^25.1.8",
-    "electron-is-dev": "^3.0.1",
-    "typescript": "^5.8.2",
-    "vite": "^6.2.2"
-  },
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@apollo/server": "^4.10.0",
+    "electron-store": "^8.1.0",
+    "graphql": "^16.8.1",
+    "graphql-tag": "^2.12.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sqlite": "^5.0.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
+    "@types/uuid": "^9.0.8",
+    "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^28.2.3",
+    "electron-builder": "^24.9.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.3"
   }
 }

@@ -1,9 +1,8 @@
-
 ## **Plan Breakdown**
 
 ### 1. **Basic Setup:**
 - [x] Set up the **Electron** app with initial folder structure and configurations.
-- [ ] Install required dependencies for **React**, **SQLite**, **GraphQL**, and other necessary libraries.
+- [x] Install required dependencies for **React**, **SQLite**, **GraphQL**, and other necessary libraries.
 - [ ] Set up **sidebar navigation** (with Settings included in the sidebar) and the basic layout.
 - [ ] Set up **basic slideout error notification** system, with error messages that can automatically slide out or remain visible if needed.
   

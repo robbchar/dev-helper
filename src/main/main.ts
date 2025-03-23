@@ -1,9 +1,15 @@
 import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 import isDev from 'electron-is-dev';
+import { startServer } from '../server';
 
-function createWindow() {
-  const mainWindow = new BrowserWindow({
+let mainWindow: BrowserWindow | null = null;
+
+async function createWindow() {
+  // Start GraphQL server
+  await startServer();
+
+  mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
