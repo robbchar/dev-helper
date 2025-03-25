@@ -18,14 +18,13 @@
 
 #### **Regex Tester**:
 - [ ] Implement regex testing functionality, including:
-  - [ ] Real-time regex pattern generation based on user input.
-  - [ ] Case sensitivity, multiline, and global flags toggleable via checkboxes.
-  - [ ] Real-time matching of strings against the regex pattern.
-  - [ ] Feedback if the regex is invalid (highlighting invalid regex areas).
-  - [ ] Show a real-time preview of the regex output based on the input string.
+  - [x] Real-time regex pattern generation based on user input.
+  - [x] Case sensitivity, multiline, and global flags toggleable via checkboxes.
+  - [x] Real-time matching of strings against the regex pattern.
+  - [x] Feedback if the regex is invalid (highlighting invalid regex areas).
+  - [x] Show a real-time preview of the regex output based on the input string.
+  - [x] Write tests for regex validation, real-time pattern generation, and error handling.
   - [ ] Allow saving of regex patterns, with a name and optional tags.
-  - [ ] Provide options for users to adjust behavior based on flags (case sensitivity, etc.).
-  - [ ] Write tests for regex validation, real-time pattern generation, and error handling.
 
 #### **JSON Formatter**:
 - [ ] Implement JSON formatting functionality, including:

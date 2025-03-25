@@ -147,7 +147,7 @@ const RegexTester: React.FC = () => {
             <div className={pageStyles.errorMessage}>{error}</div>
           ) : matches ? (
             <div className={regexStyles.matches}>
-              <div className={regexStyles.highlightedText}>
+              <div className={regexStyles.highlightedText} data-testid="highlighted-text">
                 {testString.split('').map((char, index) => {
                   const isMatch = matches.some(match => {
                     const matchStart = testString.indexOf(match[0]);
@@ -162,13 +162,17 @@ const RegexTester: React.FC = () => {
               </div>
               {matches.length > 0 ? (
                 matches.map((match, index) => (
-                  <div key={index} className={regexStyles.match}>
-                    <div className={regexStyles.matchIndex}>Match {index + 1}:</div>
-                    <div className={regexStyles.matchText}>{match[0]}</div>
+                  <div key={index} className={regexStyles.match} data-testid={`match-${index}`}>
+                    <div className={regexStyles.matchIndex} data-testid={`match-index-${index}`}>
+                      Match {index + 1}:
+                    </div>
+                    <div className={regexStyles.matchText} data-testid={`match-text-${index}`}>
+                      {match[0]}
+                    </div>
                     {match.length > 1 && (
                       <div className={regexStyles.groups}>
                         {match.slice(1).map((group: string, groupIndex: number) => (
-                          <div key={groupIndex} className={regexStyles.group}>
+                          <div key={groupIndex} className={regexStyles.group} data-testid={`group-${index}-${groupIndex}`}>
                             Group {groupIndex + 1}: {group}
                           </div>
                         ))}
@@ -177,11 +181,11 @@ const RegexTester: React.FC = () => {
                   </div>
                 ))
               ) : (
-                <div className={regexStyles.noMatch}>No matches found</div>
+                <div className={regexStyles.noMatch} data-testid="no-matches">No matches found</div>
               )}
             </div>
           ) : (
-            <div className={regexStyles.noMatch}>Enter a pattern and test string to see matches</div>
+            <div className={regexStyles.noMatch} data-testid="no-pattern">Enter a pattern and test string to see matches</div>
           )}
         </div>
 
