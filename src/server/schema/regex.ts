@@ -1,28 +1,40 @@
 export const regexTypeDefs = `#graphql
+  type RegexFlags {
+    caseInsensitive: Boolean!
+    multiline: Boolean!
+    global: Boolean!
+  }
+
   type RegexPattern {
     id: ID!
-    pattern: String!
     name: String!
-    description: String
-    flags: String
+    pattern: String!
+    testString: String
+    flags: RegexFlags!
     tags: [String!]!
-    created_at: String!
-    updated_at: String!
+    createdAt: String!
+    updatedAt: String!
+  }
+
+  input RegexFlagsInput {
+    caseInsensitive: Boolean!
+    multiline: Boolean!
+    global: Boolean!
   }
 
   input CreateRegexPatternInput {
-    pattern: String!
     name: String!
-    description: String
-    flags: String
+    pattern: String!
+    testString: String
+    flags: RegexFlagsInput!
     tags: [String!]
   }
 
   input UpdateRegexPatternInput {
-    pattern: String
     name: String
-    description: String
-    flags: String
+    pattern: String
+    testString: String
+    flags: RegexFlagsInput
     tags: [String!]
   }
 `; 

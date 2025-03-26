@@ -1,6 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useMutation } from '@apollo/client';
 import pageStyles from './Page.module.css';
 import regexStyles from './RegexTester.module.css';
+import { SAVE_REGEX_PATTERN } from '../graphql/mutations/saveRegexPattern';
+import Modal from '../components/Modal';
+import SavedPatternsList from '../components/SavedPatternsList';
+import type { SaveRegexPatternInput, RegexPattern } from '../types/RegexPattern';
+import { GET_REGEX_PATTERNS } from '../graphql/queries/getRegexPatterns';
 
 interface RegexFlags {
   caseInsensitive: boolean;
@@ -19,7 +25,46 @@ const RegexTester: React.FC = () => {
     global: false
   });
   const [error, setError] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [matches, setMatches] = useState<RegExpMatchArray[] | null>(null);
+  const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
+
+  const [saveRegexPattern, { loading: isSaving }] = useMutation<
+    { createRegexPattern: RegexPattern },
+    { input: SaveRegexPatternInput }
+  >(SAVE_REGEX_PATTERN, {
+    onError: (error) => {
+      (window as any).showNotification(error.message, 'error');
+    },
+    onCompleted: () => {
+      // Clear form after successful save
+      setPatternName('');
+      setTags('');
+      setSaveError(null);
+      (window as any).showNotification('Pattern saved successfully!', 'success');
+    },
+    update: (cache, { data }) => {
+      if (!data) return;
+
+      // Read the current patterns from the cache
+      const existingPatterns = cache.readQuery<{
+        regexPatterns: RegexPattern[];
+      }>({
+        query: GET_REGEX_PATTERNS
+      });
+
+      // Write back to the cache with the new pattern included
+      cache.writeQuery({
+        query: GET_REGEX_PATTERNS,
+        data: {
+          regexPatterns: [
+            data.createRegexPattern,
+            ...(existingPatterns?.regexPatterns || [])
+          ]
+        }
+      });
+    }
+  });
 
   const updateRegex = useCallback(() => {
     try {
@@ -83,9 +128,51 @@ const RegexTester: React.FC = () => {
     }));
   };
 
-  const handleSave = () => {
-    // TODO: Implement save functionality with GraphQL
-    console.log('Saving pattern:', { pattern, patternName, tags, flags });
+  const handleSave = async () => {
+    if (!pattern || !patternName) {
+      (window as any).showNotification('Pattern and pattern name are required', 'error');
+      return;
+    }
+
+    try {
+      // Clean the flags object to remove __typename
+      const cleanFlags = {
+        caseInsensitive: flags.caseInsensitive,
+        multiline: flags.multiline,
+        global: flags.global
+      };
+
+      await saveRegexPattern({
+        variables: {
+          input: {
+            name: patternName,
+            pattern,
+            testString,
+            tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
+            flags: cleanFlags
+          }
+        }
+      });
+    } catch (err) {
+      // Error is handled by onError in mutation options
+    }
+  };
+
+  const handleLoadPattern = (selectedPattern: {
+    pattern: string;
+    name: string;
+    testString?: string;
+    tags: string[];
+    flags: RegexFlags;
+  }) => {
+    setPattern(selectedPattern.pattern);
+    setPatternName(selectedPattern.name);
+    if (selectedPattern.testString) {
+      setTestString(selectedPattern.testString);
+    }
+    setTags(selectedPattern.tags.join(', '));
+    setFlags(selectedPattern.flags);
+    setIsLoadModalOpen(false);
   };
 
   return (
@@ -101,7 +188,7 @@ const RegexTester: React.FC = () => {
             onChange={handlePatternChange}
             className={error ? pageStyles.error : ''}
           />
-          {error && <div className={pageStyles.errorMessage}>{error}</div>}
+          {error && (window as any).showNotification(error, 'error')}
         </div>
 
         <div className={pageStyles.inputGroup}>
@@ -197,6 +284,7 @@ const RegexTester: React.FC = () => {
               type="text"
               value={patternName}
               onChange={(e) => setPatternName(e.target.value)}
+              className={saveError && !patternName ? pageStyles.error : ''}
             />
           </div>
           <div className={pageStyles.inputGroup}>
@@ -208,9 +296,32 @@ const RegexTester: React.FC = () => {
               onChange={(e) => setTags(e.target.value)}
             />
           </div>
-          <button onClick={handleSave} className={pageStyles.button}>Save Pattern</button>
+          <div className={pageStyles.buttonGroup}>
+            <button 
+              onClick={handleSave} 
+              className={pageStyles.button}
+              disabled={isSaving}
+            >
+              {isSaving ? 'Saving...' : 'Save Pattern'}
+            </button>
+            <button 
+              onClick={() => setIsLoadModalOpen(true)}
+              className={pageStyles.button}
+            >
+              Load Pattern
+            </button>
+          </div>
+          {saveError && <div className={pageStyles.errorMessage}>{saveError}</div>}
         </div>
       </div>
+
+      <Modal
+        isOpen={isLoadModalOpen}
+        onClose={() => setIsLoadModalOpen(false)}
+        title="Load Saved Pattern"
+      >
+        <SavedPatternsList onSelect={handleLoadPattern} />
+      </Modal>
     </div>
   );
 };

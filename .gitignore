@@ -55,4 +55,11 @@ Thumbs.db
 *.tsbuildinfo
 
 # Vite
-.vite/ 
+.vite/
+
+# SQLite database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite-journal 

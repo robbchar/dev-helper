@@ -8,7 +8,7 @@ import express from 'express';
 import cors from 'cors';
 import { typeDefs } from '../server/schema/index.js';
 import { resolvers } from '../server/resolvers/index.js';
-import { getDb } from '../server/db/index.js';
+import { initDatabase } from '../server/db/index.js';
 import isDev from 'electron-is-dev';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -49,6 +49,9 @@ const server = new ApolloServer({
 });
 
 async function startServer() {
+  // Initialize database first
+  await initDatabase();
+
   await server.start();
 
   expressApp.use(cors());

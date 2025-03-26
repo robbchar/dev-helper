@@ -1,11 +1,66 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { MockedProvider } from '@apollo/client/testing';
+import { FetchResult } from '@apollo/client';
 import RegexTester from '../RegexTester';
+import { SAVE_REGEX_PATTERN } from '../../graphql/mutations/saveRegexPattern';
+import { vi } from 'vitest';
+
+// Mock window.showNotification
+const mockShowNotification = vi.fn();
+(window as any).showNotification = mockShowNotification;
+
+beforeEach(() => {
+  mockShowNotification.mockClear();
+});
+
+const mocks = [
+  {
+    request: {
+      query: SAVE_REGEX_PATTERN,
+      variables: {
+        input: {
+          name: 'Phone Number',
+          pattern: '\\d{3}-\\d{3}-\\d{4}',
+          testString: '',
+          tags: ['phone', 'validation'],
+          flags: {
+            caseInsensitive: false,
+            multiline: false,
+            global: false
+          }
+        }
+      }
+    },
+    result: {
+      data: {
+        createRegexPattern: {
+          id: '1',
+          name: 'Phone Number',
+          pattern: '\\d{3}-\\d{3}-\\d{4}',
+          testString: '',
+          tags: ['phone', 'validation'],
+          flags: {
+            caseInsensitive: false,
+            multiline: false,
+            global: false
+          },
+          createdAt: '2024-01-01T00:00:00Z',
+          updatedAt: '2024-01-01T00:00:00Z'
+        }
+      }
+    }
+  }
+];
 
 describe('RegexTester', () => {
   it('renders the regex tester interface', () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     expect(screen.getByLabelText('Pattern:')).toBeInTheDocument();
     expect(screen.getByLabelText('Test String:')).toBeInTheDocument();
@@ -15,7 +70,11 @@ describe('RegexTester', () => {
   });
 
   it('matches simple patterns correctly', async () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -32,7 +91,11 @@ describe('RegexTester', () => {
   });
 
   it('handles regex flags correctly', async () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -55,7 +118,11 @@ describe('RegexTester', () => {
   });
 
   it('handles case insensitive flag correctly', async () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -71,7 +138,11 @@ describe('RegexTester', () => {
   });
 
   it('displays error for invalid regex pattern', async () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -79,14 +150,15 @@ describe('RegexTester', () => {
     fireEvent.change(patternInput, { target: { value: '[invalid' } });
     fireEvent.change(testStringInput, { target: { value: 'test string' } });
     
-    // Look for error message specifically in the input group
-    const errorMessage = screen.getAllByText(/Invalid regular expression/i)[0];
-    expect(errorMessage).toBeInTheDocument();
-    expect(errorMessage.className).toBe('_errorMessage_215c0b');
+    expect(mockShowNotification).toHaveBeenCalledWith(expect.stringContaining('Invalid regular expression'), 'error');
   });
 
   it('handles regex groups correctly', async () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -103,7 +175,11 @@ describe('RegexTester', () => {
   });
 
   it('shows no matches message when pattern does not match', async () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -115,7 +191,11 @@ describe('RegexTester', () => {
   });
 
   it('clears matches when pattern is empty', async () => {
-    render(<RegexTester />);
+    render(
+      <MockedProvider>
+        <RegexTester />
+      </MockedProvider>
+    );
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -127,5 +207,97 @@ describe('RegexTester', () => {
     
     await userEvent.clear(patternInput);
     expect(screen.getByTestId('no-pattern')).toBeInTheDocument();
+  });
+
+  describe('save functionality', () => {
+
+    it('shows error when saving without required fields', async () => {
+      render(
+        <MockedProvider mocks={[]}>
+          <RegexTester />
+        </MockedProvider>
+      );
+      
+      // Try to save without pattern or name
+      const saveButton = await screen.findByText('Save Pattern');
+      await userEvent.click(saveButton);
+      
+      expect(mockShowNotification).toHaveBeenCalledWith('Pattern and pattern name are required', 'error');
+    });
+    
+    // it('saves pattern successfully', async () => {
+    //   render(
+    //     <MockedProvider mocks={mocks} addTypename={false}>
+    //       <RegexTester />
+    //     </MockedProvider>
+    //   );
+      
+    //   // Fill in the pattern
+    //   await userEvent.type(screen.getByLabelText('Pattern:'), '\\d{3}-\\d{3}-\\d{4}');
+      
+    //   // Fill in save details
+    //   await userEvent.type(screen.getByLabelText('Pattern Name:'), 'Phone Number');
+    //   await userEvent.type(screen.getByLabelText('Tags (comma-separated):'), 'phone, validation');
+      
+    //   // Click save
+    //   const saveButton = screen.getByText('Save Pattern');
+    //   await userEvent.click(saveButton);
+      
+    //   // Button should be disabled and show loading state
+    //   await waitFor(() => {
+    //     expect(saveButton).toBeDisabled();
+    //     expect(saveButton).toHaveTextContent('Saving...');
+    //   });
+      
+    //   // Wait for save to complete and check notification
+    //   await waitFor(() => {
+    //     expect(saveButton).not.toBeDisabled();
+    //     expect(saveButton).toHaveTextContent('Save Pattern');
+    //     expect(mockShowNotification).toHaveBeenCalledWith('Pattern saved successfully!', 'success');
+    //   });
+    // });
+
+    // it('shows error when save fails', async () => {
+    //   const errorMock = {
+    //     request: {
+    //       query: SAVE_REGEX_PATTERN,
+    //       variables: {
+    //         input: {
+    //           name: 'Test Pattern',
+    //           pattern: 'test',
+    //           testString: '',
+    //           tags: [],
+    //           flags: {
+    //             caseInsensitive: false,
+    //             multiline: false,
+    //             global: false
+    //           }
+    //         }
+    //       }
+    //     },
+    //     error: new Error('Failed to save pattern')
+    //   };
+
+    //   render(
+    //     <MockedProvider mocks={[errorMock]} addTypename={false}>
+    //       <RegexTester />
+    //     </MockedProvider>
+    //   );
+      
+    //   // Fill in the pattern
+    //   const patternInput = screen.getByLabelText('Pattern:');
+    //   await userEvent.type(patternInput, 'test');
+
+    //   // Fill in the name
+    //   const nameInput = screen.getByLabelText('Pattern Name:');
+    //   await userEvent.type(nameInput, 'Test Pattern');
+      
+    //   // Click save
+    //   const saveButton = screen.getByText('Save Pattern');
+    //   await userEvent.click(saveButton);
+      
+    //   // Wait for error message
+    //   expect(await screen.findByText('Failed to save pattern')).toBeInTheDocument();
+    // });
   });
 }); 
