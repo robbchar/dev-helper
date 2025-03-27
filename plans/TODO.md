@@ -17,14 +17,14 @@
 ### 3. **Feature Implementation (in order):**
 
 #### **Regex Tester**:
-- [ ] Implement regex testing functionality, including:
+- [x] Implement regex testing functionality, including:
   - [x] Real-time regex pattern generation based on user input.
   - [x] Case sensitivity, multiline, and global flags toggleable via checkboxes.
   - [x] Real-time matching of strings against the regex pattern.
   - [x] Feedback if the regex is invalid (highlighting invalid regex areas).
   - [x] Show a real-time preview of the regex output based on the input string.
   - [x] Write tests for regex validation, real-time pattern generation, and error handling.
-  - [ ] Allow saving of regex patterns, with a name and optional tags.
+  - [x] Allow saving of regex patterns, with a name and optional tags.
 
 #### **JSON Formatter**:
 - [ ] Implement JSON formatting functionality, including:
