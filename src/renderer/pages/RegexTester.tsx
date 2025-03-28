@@ -299,14 +299,12 @@ const RegexTester: React.FC = () => {
           <div className={pageStyles.buttonGroup}>
             <button 
               onClick={handleSave} 
-              className={pageStyles.button}
               disabled={isSaving}
             >
               {isSaving ? 'Saving...' : 'Save Pattern'}
             </button>
             <button 
               onClick={() => setIsLoadModalOpen(true)}
-              className={pageStyles.button}
             >
               Load Pattern
             </button>

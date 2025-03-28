@@ -50,6 +50,7 @@
 .errorMessage {
   color: #ef4444;
   font-size: 0.875rem;
+  margin-top: 0.5rem;
 }
 
 .flags {
@@ -123,7 +124,7 @@
   margin-bottom: 16px;
 }
 
-.button {
+button {
   padding: 8px 16px;
   background-color: #007bff;
   color: white;
@@ -133,11 +134,11 @@
   transition: background-color 0.2s;
 }
 
-.button:hover {
+button:hover {
   background-color: #0056b3;
 }
 
-.button:disabled {
+button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 } 

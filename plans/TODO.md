@@ -27,13 +27,13 @@
   - [x] Allow saving of regex patterns, with a name and optional tags.
 
 #### **JSON Formatter**:
-- [ ] Implement JSON formatting functionality, including:
-  - [ ] Real-time JSON validation as text is entered (squiggly underline errors).
-  - [ ] Real-time JSON formatting and auto-correction for invalid JSON (focus on in-app editing).
-  - [ ] Syntax highlighting based on JSON format (different colors for property names and values).
-  - [ ] Clear notification for invalid JSON.
-  - [ ] No file saving or loading functionality (focused on in-app editing).
-  - [ ] Write tests for JSON validation and formatting.
+- [x] Implement JSON formatting functionality, including:
+  - [x] Real-time JSON validation as text is entered (squiggly underline errors).
+  - [x] Real-time JSON formatting and auto-correction for invalid JSON (focus on in-app editing).
+  - [x] Syntax highlighting based on JSON format (different colors for property names and values).
+  - [x] Clear notification for invalid JSON.
+  - [x] No file saving or loading functionality (focused on in-app editing).
+  - [x] Write tests for JSON validation and formatting.
 
 #### **Snippet Manager**:
 - [ ] Implement snippet storage and management functionality, including:

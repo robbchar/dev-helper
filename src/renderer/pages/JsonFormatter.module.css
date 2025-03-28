@@ -1,0 +1,58 @@
+/* .buttonGroup {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #2563eb;
+} */
+
+.editorContainer {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.editorContainer :global(.cm-editor) {
+  height: 100%;
+}
+
+.editorContainer :global(.cm-scroller) {
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.editorContainer :global(.cm-gutters) {
+  background-color: #1e293b;
+  border-right: 1px solid #334155;
+}
+
+.editorContainer :global(.cm-lineNumbers) {
+  color: #94a3b8;
+}
+
+.editorContainer :global(.cm-content) {
+  padding: 8px 0;
+}
+
+.editorContainer :global(.cm-activeLine) {
+  background-color: #1e293b;
+}
+
+.editorContainer :global(.cm-activeLineGutter) {
+  background-color: #1e293b;
+  color: #e2e8f0;
+} 

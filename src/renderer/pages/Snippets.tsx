@@ -29,7 +29,6 @@ const Snippets: React.FC = () => {
         <p className={styles.text}>Your code snippets will appear here.</p>
         <button 
           onClick={testNotifications}
-          className={styles.button}
         >
           Test Notifications
         </button>
