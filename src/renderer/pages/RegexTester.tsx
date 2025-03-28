@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import pageStyles from './Page.module.css';
 import regexStyles from './RegexTester.module.css';
@@ -7,27 +7,16 @@ import Modal from '../components/Modal';
 import SavedPatternsList from '../components/SavedPatternsList';
 import type { SaveRegexPatternInput, RegexPattern } from '../types/RegexPattern';
 import { GET_REGEX_PATTERNS } from '../graphql/queries/getRegexPatterns';
-
-interface RegexFlags {
-  caseInsensitive: boolean;
-  multiline: boolean;
-  global: boolean;
-}
+import { useRegexTester, type RegexFlags } from '../contexts/RegexTesterContext';
 
 const RegexTester: React.FC = () => {
-  const [pattern, setPattern] = useState('');
-  const [testString, setTestString] = useState('');
-  const [patternName, setPatternName] = useState('');
-  const [tags, setTags] = useState('');
-  const [flags, setFlags] = useState<RegexFlags>({
-    caseInsensitive: false,
-    multiline: false,
-    global: false
-  });
-  const [error, setError] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [matches, setMatches] = useState<RegExpMatchArray[] | null>(null);
-  const [isLoadModalOpen, setIsLoadModalOpen] = useState(false);
+  const { pattern, setPattern, testString, setTestString, flags, setFlags } = useRegexTester();
+  const [patternName, setPatternName] = React.useState('');
+  const [tags, setTags] = React.useState('');
+  const [error, setError] = React.useState<string | null>(null);
+  const [saveError, setSaveError] = React.useState<string | null>(null);
+  const [matches, setMatches] = React.useState<RegExpMatchArray[] | null>(null);
+  const [isLoadModalOpen, setIsLoadModalOpen] = React.useState(false);
 
   const [saveRegexPattern, { loading: isSaving }] = useMutation<
     { createRegexPattern: RegexPattern },
@@ -122,10 +111,10 @@ const RegexTester: React.FC = () => {
   };
 
   const handleFlagToggle = (flag: keyof RegexFlags) => {
-    setFlags(prev => ({
-      ...prev,
-      [flag]: !prev[flag]
-    }));
+    setFlags({
+      ...flags,
+      [flag]: !flags[flag]
+    });
   };
 
   const handleSave = async () => {
@@ -163,7 +152,7 @@ const RegexTester: React.FC = () => {
     name: string;
     testString?: string;
     tags: string[];
-    flags: RegexFlags;
+    flags: typeof flags;
   }) => {
     setPattern(selectedPattern.pattern);
     setPatternName(selectedPattern.name);

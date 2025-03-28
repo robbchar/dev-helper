@@ -1,11 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MockedProvider } from '@apollo/client/testing';
-import { FetchResult } from '@apollo/client';
 import RegexTester from '../RegexTester';
 import { SAVE_REGEX_PATTERN } from '../../graphql/mutations/saveRegexPattern';
 import { vi } from 'vitest';
+import { RegexTesterProvider } from '../../contexts/RegexTesterContext';
 
 // Mock window.showNotification
 const mockShowNotification = vi.fn();
@@ -54,13 +54,19 @@ const mocks = [
   }
 ];
 
+const renderWithProviders = (ui: React.ReactElement) => {
+  return render(
+    <MockedProvider>
+      <RegexTesterProvider>
+        {ui}
+      </RegexTesterProvider>
+    </MockedProvider>
+  );
+};
+
 describe('RegexTester', () => {
   it('renders the regex tester interface', () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     expect(screen.getByLabelText('Pattern:')).toBeInTheDocument();
     expect(screen.getByLabelText('Test String:')).toBeInTheDocument();
@@ -70,11 +76,7 @@ describe('RegexTester', () => {
   });
 
   it('matches simple patterns correctly', async () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -91,11 +93,7 @@ describe('RegexTester', () => {
   });
 
   it('handles regex flags correctly', async () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -118,11 +116,7 @@ describe('RegexTester', () => {
   });
 
   it('handles case insensitive flag correctly', async () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -138,11 +132,7 @@ describe('RegexTester', () => {
   });
 
   it('displays error for invalid regex pattern', async () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -154,11 +144,7 @@ describe('RegexTester', () => {
   });
 
   it('handles regex groups correctly', async () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -175,11 +161,7 @@ describe('RegexTester', () => {
   });
 
   it('shows no matches message when pattern does not match', async () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -191,11 +173,7 @@ describe('RegexTester', () => {
   });
 
   it('clears matches when pattern is empty', async () => {
-    render(
-      <MockedProvider>
-        <RegexTester />
-      </MockedProvider>
-    );
+    renderWithProviders(<RegexTester />);
     
     const patternInput = screen.getByLabelText('Pattern:');
     const testStringInput = screen.getByLabelText('Test String:');
@@ -210,13 +188,8 @@ describe('RegexTester', () => {
   });
 
   describe('save functionality', () => {
-
     it('shows error when saving without required fields', async () => {
-      render(
-        <MockedProvider mocks={[]}>
-          <RegexTester />
-        </MockedProvider>
-      );
+      renderWithProviders(<RegexTester />);
       
       // Try to save without pattern or name
       const saveButton = await screen.findByText('Save Pattern');
