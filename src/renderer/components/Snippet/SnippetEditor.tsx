@@ -1,8 +1,8 @@
 import React from 'react';
-import type { CreateSnippetInput, UpdateSnippetInput } from '../types/Snippet';
+import type { CreateSnippetInput, UpdateSnippetInput } from '../../types/Snippet';
 import styles from './SnippetEditor.module.css';
-import pageStyles from '../pages/Page.module.css';
-import { useSnippet } from '../contexts/SnippetContext';
+import pageStyles from '../../pages/Page.module.css';
+import { useSnippet } from '../../contexts/SnippetContext';
 
 interface SnippetEditorProps {
   onCreate: (input: CreateSnippetInput) => void;
@@ -114,7 +114,7 @@ const SnippetEditor: React.FC<SnippetEditorProps> = ({
 
       <div className={styles.field}>
         <label>Tags</label>
-        <div className={styles.tags}>
+        <div className={styles.tagsSection}>
           {formState.tags.map((tag) => (
             <span key={tag} className={styles.tag}>
               {tag}

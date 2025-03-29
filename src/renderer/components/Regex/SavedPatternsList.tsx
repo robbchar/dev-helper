@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import styles from './SavedPatternsList.module.css';
-import { GET_REGEX_PATTERNS } from '../graphql/queries/getRegexPatterns';
+import { GET_REGEX_PATTERNS } from '../../graphql/queries/getRegexPatterns';
 
 interface SavedPatternsListProps {
   onSelect: (pattern: {

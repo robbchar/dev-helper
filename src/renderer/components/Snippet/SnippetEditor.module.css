@@ -51,16 +51,7 @@
 
 .tagsSection {
   display: flex;
-  flex-direction: column;
   gap: 0.5rem;
-}
-
-.tagsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  min-height: 32px;
-  padding: 0.25rem 0;
 }
 
 .tag {
@@ -159,4 +150,10 @@
 
 .deleteButton:hover {
   background-color: var(--error-hover);
+}
+
+.error {
+  color: var(--error);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 } 

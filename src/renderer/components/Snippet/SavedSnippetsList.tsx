@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import styles from './SavedSnippetsList.module.css';
-import { GET_SNIPPETS } from '../graphql/queries/getSnippets';
-import type { Snippet } from '../types/Snippet';
-import { useSnippet } from '../contexts/SnippetContext';
+import { GET_SNIPPETS } from '../../graphql/queries/getSnippets';
+import { useSnippet } from '../../contexts/SnippetContext';
+import type { Snippet } from '../../types/Snippet';
 
 interface SavedSnippetsListProps {
   onSelect: (snippet: Snippet) => void;

@@ -51,12 +51,12 @@
   - [ ] Focus on **clean minimalist UI**.
   - [ ] Implement theme support (light/dark mode) with system preference detection.
 - [ ] Test and refine the error handling system:
-  - [ ] Ensure **slideout notifications** work correctly, with error messages able to stay visible if required.
+  - [x] Ensure **slideout notifications** work correctly, with error messages able to stay visible if required.
   - [ ] Implement **component highlighting** to indicate specific error areas in components.
 
 ### 5. **Testing and Refinement:**
-- [ ] Continue developing **unit tests** for each module as they are built:
-  - [ ] Write tests for Regex Tester, JSON Formatter, and Snippet Manager.
+- [x] Continue developing **unit tests** for each module as they are built:
+  - [x] Write tests for Regex Tester, JSON Formatter, and Snippet Manager.
 - [ ] Perform **integration and end-to-end tests** for the app as a whole.
   - [ ] Ensure modules interact smoothly together (Regex, JSON, Snippets).
 - [ ] Refine the user experience based on feedback and discovered issues.
