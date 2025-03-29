@@ -1,0 +1,162 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  height: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--background);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.field input[type="text"],
+.field textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+}
+
+.field input[type="text"]:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.field textarea {
+  resize: vertical;
+  line-height: 1.5;
+  min-height: 100px;
+}
+
+.field textarea[id="code"] {
+  font-family: monospace;
+  min-height: 200px;
+}
+
+.tagsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 32px;
+  padding: 0.25rem 0;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: var(--primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.875rem;
+}
+
+.removeTag {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  opacity: 0.8;
+}
+
+.removeTag:hover {
+  opacity: 1;
+}
+
+.addTagForm {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.addTagForm input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+.addTagForm input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.addTagForm button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.addTagForm button:hover {
+  background-color: var(--primary-hover);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.submitButton,
+.deleteButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  border: none;
+}
+
+.submitButton {
+  background-color: var(--primary);
+  color: white;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+.submitButton:disabled {
+  background-color: var(--disabled);
+  cursor: not-allowed;
+}
+
+.deleteButton {
+  background-color: var(--error);
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: var(--error-hover);
+} 

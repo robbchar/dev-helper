@@ -11,6 +11,7 @@ import NotificationManager from './components/Notification/NotificationManager';
 import { ThemeProvider } from './contexts';
 import { JsonFormatterProvider } from './contexts/JsonFormatterContext';
 import { RegexTesterProvider } from './contexts/RegexTesterContext';
+import { SnippetProvider } from './contexts/SnippetContext';
 import styles from './App.module.css';
 
 const App: React.FC = () => {
@@ -19,20 +20,22 @@ const App: React.FC = () => {
       <ThemeProvider>
         <JsonFormatterProvider>
           <RegexTesterProvider>
-            <Router>
-              <div className={styles.app}>
-                <Sidebar />
-                <main className={styles.main}>
-                  <Routes>
-                    <Route path="/" element={<Snippets />} />
-                    <Route path="/regex" element={<RegexTester />} />
-                    <Route path="/json" element={<JsonFormatter />} />
-                    <Route path="/settings" element={<Settings />} />
-                  </Routes>
-                </main>
-                <NotificationManager />
-              </div>
-            </Router>
+            <SnippetProvider>
+              <Router>
+                <div className={styles.app}>
+                  <Sidebar />
+                  <main className={styles.main}>
+                    <Routes>
+                      <Route path="/" element={<Snippets />} />
+                      <Route path="/regex" element={<RegexTester />} />
+                      <Route path="/json" element={<JsonFormatter />} />
+                      <Route path="/settings" element={<Settings />} />
+                    </Routes>
+                  </main>
+                  <NotificationManager />
+                </div>
+              </Router>
+            </SnippetProvider>
           </RegexTesterProvider>
         </JsonFormatterProvider>
       </ThemeProvider>

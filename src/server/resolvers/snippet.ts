@@ -26,20 +26,17 @@ function transformDBToSnippet(dbSnippet: SnippetDB): Snippet {
   };
 }
 
-function transformSnippetToDB(snippet: CreateSnippetInput): SnippetDB {
+function transformSnippetToDB(snippet: CreateSnippetInput | UpdateSnippetInput): Partial<SnippetDB> {
   return {
-    id: '', // This will be set by the caller
     title: snippet.title,
     description: snippet.description || null,
     code: snippet.code,
     language: snippet.language,
-    tags: snippet.tags ? JSON.stringify(snippet.tags) : null,
-    created_at: '', // This will be set by the caller
-    updated_at: '' // This will be set by the caller
+    tags: snippet.tags ? JSON.stringify(snippet.tags) : null
   };
 }
 
-export const snippetsResolvers = {
+export const snippetResolvers = {
   Query: {
     async snippets() {
       const db = await getDb();
@@ -47,29 +44,24 @@ export const snippetsResolvers = {
       return snippets.map(transformDBToSnippet);
     },
 
-    async snippet(_parent: unknown, { id }: { id: string }): Promise<Snippet | null> {
+    async snippet(_parent: unknown, { id }: { id: string }) {
       const db = await getDb();
-      const snippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB | undefined;
-      if (!snippet) return null;
-      return transformDBToSnippet(snippet);
+      const snippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB;
+      return snippet ? transformDBToSnippet(snippet) : null;
     },
 
     async searchSnippets(_parent: unknown, { query, tags }: { query: string; tags?: string[] }) {
       const db = await getDb();
-      let sql = 'SELECT * FROM snippets WHERE 1=1';
-      const params: any[] = [];
+      let sql = 'SELECT * FROM snippets WHERE title LIKE ? OR description LIKE ?';
+      const params = [`%${query}%`, `%${query}%`];
 
-      // Search in title and description
-      if (query) {
-        sql += ' AND (title LIKE ? OR description LIKE ?)';
-        params.push(`%${query}%`, `%${query}%`);
-      }
-
-      // Filter by tags if provided
       if (tags && tags.length > 0) {
-        const tagConditions = tags.map(() => 'json_array_length(tags) > 0 AND json_array_contains(tags, ?)');
-        sql += ` AND (${tagConditions.join(' OR ')})`;
-        params.push(...tags);
+        sql += ' AND (';
+        const tagConditions = tags.map((tag, index) => {
+          params.push(`%${tag}%`);
+          return `tags LIKE ?`;
+        });
+        sql += tagConditions.join(' OR ') + ')';
       }
 
       sql += ' ORDER BY created_at DESC';
@@ -114,7 +106,7 @@ export const snippetsResolvers = {
       const db = await getDb();
 
       // Check if snippet exists
-      const existingSnippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB;
+      const existingSnippet = db.prepare('SELECT id FROM snippets WHERE id = ?').get(id);
       if (!existingSnippet) {
         throw new Error(`Snippet with ID "${id}" not found`);
       }
@@ -128,32 +120,38 @@ export const snippetsResolvers = {
       }
 
       const now = new Date().toISOString();
+      const snippetData = transformSnippetToDB(input);
       
-      // Start with existing data and merge updates
-      const updates = {
-        title: input.title ?? existingSnippet.title,
-        description: input.description ?? existingSnippet.description,
-        code: input.code ?? existingSnippet.code,
-        language: input.language ?? existingSnippet.language,
-        tags: input.tags ? JSON.stringify(input.tags) : existingSnippet.tags,
-        updated_at: now
-      };
+      const updates: string[] = [];
+      const params: any[] = [];
 
-      const sql = `
-        UPDATE snippets 
-        SET title = ?, description = ?, code = ?, language = ?, tags = ?, updated_at = ?
-        WHERE id = ?
-      `;
+      if (snippetData.title !== undefined) {
+        updates.push('title = ?');
+        params.push(snippetData.title);
+      }
+      if (snippetData.description !== undefined) {
+        updates.push('description = ?');
+        params.push(snippetData.description);
+      }
+      if (snippetData.code !== undefined) {
+        updates.push('code = ?');
+        params.push(snippetData.code);
+      }
+      if (snippetData.language !== undefined) {
+        updates.push('language = ?');
+        params.push(snippetData.language);
+      }
+      if (snippetData.tags !== undefined) {
+        updates.push('tags = ?');
+        params.push(snippetData.tags);
+      }
 
-      db.prepare(sql).run(
-        updates.title,
-        updates.description,
-        updates.code,
-        updates.language,
-        updates.tags,
-        updates.updated_at,
-        id
-      );
+      updates.push('updated_at = ?');
+      params.push(now);
+      params.push(id);
+
+      const sql = `UPDATE snippets SET ${updates.join(', ')} WHERE id = ?`;
+      db.prepare(sql).run(...params);
 
       const snippet = db.prepare('SELECT * FROM snippets WHERE id = ?').get(id) as SnippetDB;
       return transformDBToSnippet(snippet);

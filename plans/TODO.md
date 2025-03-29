@@ -37,12 +37,13 @@
 
 #### **Snippet Manager**:
 - [ ] Implement snippet storage and management functionality, including:
-  - [ ] Allow users to store code snippets with customizable **titles**, **descriptions**, and **tags**.
-  - [ ] Store snippets in a flat list and provide **search** functionality for names, descriptions, and tags.
+  - [x] Allow users to store code snippets with customizable **titles**, **descriptions**, and **tags**.
+  - [x] Store snippets in a flat list and provide **search** functionality for names, descriptions, and tags.
   - [ ] Display **syntax highlighting** for code snippets based on the language.
-  - [ ] Implement **search box** for arbitrary text search through titles and descriptions (tags will be a separate searchable area).
-  - [ ] Provide the ability for users to label snippets with arbitrary names and tags.
-  - [ ] Write tests for snippet storage, search, and retrieval.
+  - [x] Provide the ability for users to label snippets with arbitrary names and tags.
+  - [x] Implement **search box** for arbitrary text search through titles and descriptions (tags will be a separate searchable area).
+    - [x] You should be able to toggle tags in the load dialog like the Regex Tester feature.
+  - [x] Write tests for snippet storage, search, and retrieval.
 
 ### 4. **UI/UX Enhancements:**
 - [ ] Polish the UI with subtle animations/tweaks.

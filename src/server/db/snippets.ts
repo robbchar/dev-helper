@@ -10,8 +10,8 @@ export async function initSnippetsTable() {
       code TEXT NOT NULL,
       language TEXT NOT NULL,
       tags TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
     )
   `);
 } 

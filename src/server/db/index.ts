@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import { app } from 'electron';
 import { initSnippetsTable } from './snippets.js';
 import { initRegexTable } from './regex.js';
 
@@ -11,7 +12,9 @@ let db: Database.Database | null = null;
 
 export async function getDb() {
   if (!db) {
-    db = new Database(path.join(__dirname, '../../../data.db'));
+    const userDataPath = app.getPath('userData');
+    const dbPath = path.join(userDataPath, 'data.db');
+    db = new Database(dbPath);
   }
   return db;
 }

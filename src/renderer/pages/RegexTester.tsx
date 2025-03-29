@@ -166,7 +166,14 @@ const RegexTester: React.FC = () => {
 
   return (
     <div className={pageStyles.container}>
-      <h1 className={pageStyles.title}>Regex Tester</h1>
+      <div className={pageStyles.header}>
+        <h1>Regex Tester</h1>
+        <button 
+          onClick={() => setIsLoadModalOpen(true)}
+        >
+          Load Pattern
+        </button>
+      </div>
       <div className={pageStyles.content}>
         <div className={pageStyles.inputGroup}>
           <label htmlFor="pattern">Pattern:</label>
@@ -190,7 +197,7 @@ const RegexTester: React.FC = () => {
           />
         </div>
 
-        <div className={pageStyles.flags}>
+        <div className={regexStyles.flags}>
           <label>
             <input
               type="checkbox"
@@ -292,11 +299,7 @@ const RegexTester: React.FC = () => {
             >
               {isSaving ? 'Saving...' : 'Save Pattern'}
             </button>
-            <button 
-              onClick={() => setIsLoadModalOpen(true)}
-            >
-              Load Pattern
-            </button>
+            
           </div>
           {saveError && <div className={pageStyles.errorMessage}>{saveError}</div>}
         </div>

@@ -8,6 +8,7 @@ export const typeDefs = `#graphql
   type Query {
     snippets: [Snippet!]!
     snippet(id: ID!): Snippet
+    searchSnippets(query: String!, tags: [String!]): [Snippet!]!
     regexPatterns: [RegexPattern!]!
     regexPattern(id: ID!): RegexPattern
   }
