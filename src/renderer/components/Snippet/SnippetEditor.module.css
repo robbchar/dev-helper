@@ -1,12 +1,18 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem;
+  gap: 1rem;
+  padding: 1rem;
   height: 100%;
   max-width: 800px;
   margin: 0 auto;
   background-color: var(--background);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .field {
@@ -20,8 +26,9 @@
   font-weight: 500;
 }
 
-.field input[type="text"],
-.field textarea {
+.input,
+.textarea,
+.select {
   padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -32,26 +39,56 @@
   width: 100%;
 }
 
-.field input[type="text"]:focus,
-.field textarea:focus {
+.input:focus,
+.textarea:focus,
+.select:focus {
   outline: none;
   border-color: var(--primary);
 }
 
-.field textarea {
-  resize: vertical;
-  line-height: 1.5;
+.textarea {
   min-height: 100px;
+  resize: vertical;
 }
 
-.field textarea[id="code"] {
-  font-family: monospace;
-  min-height: 200px;
+.codeEditor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  height: 400px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.codeInput {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  border: none;
+  border-right: 1px solid var(--border);
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+.codePreview {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 
 .tagsSection {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  min-height: 2.5rem;
 }
 
 .tag {
@@ -116,7 +153,7 @@
 .actions {
   display: flex;
   gap: 1rem;
-  margin-top: auto;
+  margin-top: 1rem;
 }
 
 .submitButton,
